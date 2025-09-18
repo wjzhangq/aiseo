@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI影响力营销平台</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 自定义配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6', // 蓝色作为主色调，传达科技感和专业性
+            secondary: '#10B981', // 绿色用于成功状态（已收录）
+            danger: '#EF4444', // 红色用于未收录状态
+            neutral: {
+              100: '#F3F4F6',
+              200: '#E5E7EB',
+              300: '#D1D5DB',
+              400: '#9CA3AF',
+              500: '#6B7280',
+              600: '#4B5563',
+              700: '#374151',
+              800: '#1F2937',
+              900: '#111827',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .search-input-focus {
+        @apply focus:ring-2 focus:ring-primary/50 focus:border-primary;
+      }
+      .transition-standard {
+        @apply transition-all duration-300 ease-in-out;
+      }
+      .card-hover-effect {
+        @apply hover:shadow-card-hover hover:-translate-y-1 transition-standard;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-neutral-800 min-h-screen flex flex-col">
+  <!-- 导航栏 -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-search text-primary text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-neutral-800">AI收录结果查询<span class="text-primary"></h1>
+      </div>
+      
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#" class="text-primary font-medium">产品搜索</a>
+        <a href="#" class="text-neutral-600 hover:text-primary transition-standard">收录管理</a>
+        <a href="#" class="text-neutral-600 hover:text-primary transition-standard">向量分析</a>
+        <a href="#" class="text-neutral-600 hover:text-primary transition-standard">帮助中心</a>
+      </nav>
+      
+      <div class="flex items-center space-x-4">
+        <button class="hidden md:block px-4 py-2 text-neutral-600 hover:text-primary transition-standard">
+          <i class="fa fa-bell-o mr-1"></i> 通知
+        </button>
+        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+          <i class="fa fa-user"></i>
+        </div>
+        <button class="md:hidden text-neutral-600">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要内容 -->
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <div class="text-center mb-10">
+      <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-3">产品向量搜索与收录检查</h2>
+      <p class="text-neutral-500 max-w-2xl mx-auto">搜索已向量化的产品信息，查看产品是否已被大模型收录，确保您的产品数据在AI系统中可用</p>
+    </div>
+    
+    <!-- 搜索区域 -->
+    <div class="max-w-3xl mx-auto mb-12">
+      <div class="bg-white rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg">
+        <form id="searchForm" class="space-y-4">
+          <div class="relative">
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="输入产品名称、ID或关键词进行搜索..." 
+              class="w-full px-5 py-4 rounded-lg border border-neutral-300 search-input-focus outline-none transition-standard pl-12"
+            >
+            <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+          </div>
+          
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" checked>
+                <div class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                <span class="ml-2 text-sm font-medium text-neutral-700">仅显示已收录产品</span>
+              </label>
+              
+              <button type="button" class="text-primary text-sm hover:underline flex items-center transition-standard">
+                <i class="fa fa-sliders mr-1"></i> 高级筛选
+              </button>
+            </div>
+            
+            <button 
+              type="submit" 
+              class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-standard flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+            >
+              <i class="fa fa-search"></i>
+              <span>搜索产品</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- 搜索结果区域 -->
+    <div id="searchResults" class="space-y-6">
+      <!-- 搜索结果统计 -->
+      <div class="bg-white rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="text-neutral-600">
+          <span class="font-semibold text-neutral-800">12</span> 个搜索结果（搜索用时 <span class="text-primary font-medium">0.32</span> 秒）
+        </div>
+        <div class="flex items-center space-x-2">
+          <label for="sortBy" class="text-sm text-neutral-600">排序方式：</label>
+          <select id="sortBy" class="border border-neutral-300 rounded-lg px-3 py-1.5 text-sm outline-none focus:ring-1 focus:ring-primary focus:border-primary">
+            <option>相关度</option>
+            <option>最新收录</option>
+            <option>名称（A-Z）</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- 搜索结果列表 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 产品卡片 1 - 已收录 -->
+        <div class="bg-white rounded-xl shadow-card overflow-hidden card-hover-effect">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-1">智能手表 Pro X5</h3>
+                <p class="text-neutral-500 text-sm">产品ID: PRO-W-2023-0589</p>
+              </div>
+              <span class="bg-secondary/10 text-secondary text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa fa-check-circle"></i> 已收录
+              </span>
+            </div>
+            
+            <p class="text-neutral-600 mb-4 line-clamp-2">
+              这款智能手表配备高清触摸屏，支持心率监测、血氧检测和睡眠分析，拥有7天续航能力，防水等级IP68。
+            </p>
+            
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">智能穿戴</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">健康监测</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">蓝牙</span>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2 border-t border-neutral-100">
+              <div class="text-sm text-neutral-500">
+                <span class="block">向量相似度: <span class="text-primary font-medium">92.5%</span></span>
+                <span class="block mt-1">最后更新: 2023-08-15</span>
+              </div>
+              <button class="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1 transition-standard">
+                查看详情 <i class="fa fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 产品卡片 2 - 未收录 -->
+        <div class="bg-white rounded-xl shadow-card overflow-hidden card-hover-effect">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-1">无线蓝牙耳机 Mini</h3>
+                <p class="text-neutral-500 text-sm">产品ID: AUD-BT-2023-1145</p>
+              </div>
+              <span class="bg-danger/10 text-danger text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa fa-times-circle"></i> 未收录
+              </span>
+            </div>
+            
+            <p class="text-neutral-600 mb-4 line-clamp-2">
+              超小型无线蓝牙耳机，采用最新蓝牙5.3技术，提供清晰音质和降噪功能，单次充电可使用6小时。
+            </p>
+            
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">音频设备</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">无线</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">降噪</span>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2 border-t border-neutral-100">
+              <div class="text-sm text-neutral-500">
+                <span class="block">向量相似度: <span class="text-primary font-medium">87.3%</span></span>
+                <span class="block mt-1">最后更新: 2023-08-10</span>
+              </div>
+              <button class="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1 transition-standard">
+                查看详情 <i class="fa fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 产品卡片 3 - 已收录 -->
+        <div class="bg-white rounded-xl shadow-card overflow-hidden card-hover-effect">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-1">便携式充电宝 20000mAh</h3>
+                <p class="text-neutral-500 text-sm">产品ID: PWR-BANK-2023-0872</p>
+              </div>
+              <span class="bg-secondary/10 text-secondary text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa fa-check-circle"></i> 已收录
+              </span>
+            </div>
+            
+            <p class="text-neutral-600 mb-4 line-clamp-2">
+              大容量便携式充电宝，支持双向快充，配备USB-A和USB-C接口，兼容多种设备，内置智能保护芯片。
+            </p>
+            
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">移动电源</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">快充</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">便携</span>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2 border-t border-neutral-100">
+              <div class="text-sm text-neutral-500">
+                <span class="block">向量相似度: <span class="text-primary font-medium">85.7%</span></span>
+                <span class="block mt-1">最后更新: 2023-08-05</span>
+              </div>
+              <button class="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1 transition-standard">
+                查看详情 <i class="fa fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 产品卡片 4 - 已收录 -->
+        <div class="bg-white rounded-xl shadow-card overflow-hidden card-hover-effect">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-1">智能空气净化器</h3>
+                <p class="text-neutral-500 text-sm">产品ID: HME-ACP-2023-0321</p>
+              </div>
+              <span class="bg-secondary/10 text-secondary text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa fa-check-circle"></i> 已收录
+              </span>
+            </div>
+            
+            <p class="text-neutral-600 mb-4 line-clamp-2">
+              智能空气净化器，适用面积30-50平方米，支持PM2.5实时监测，自动调节风速，可通过APP远程控制。
+            </p>
+            
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">智能家居</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">健康</span>
+              <span class="bg-neutral-100 text-neutral-600 text-xs px-2 py-1 rounded-full">APP控制</span>
+            </div>
+            
+            <div class="flex justify-between items-center pt-2 border-t border-neutral-100">
+              <div class="text-sm text-neutral-500">
+                <span class="block">向量相似度: <span class="text-primary font-medium">82.1%</span></span>
+                <span class="block mt-1">最后更新: 2023-07-28</span>
+              </div>
+              <button class="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1 transition-standard">
+                查看详情 <i class="fa fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 分页 -->
+      <div class="flex justify-center mt-10">
+        <nav class="inline-flex rounded-md shadow-sm" aria-label="分页">
+          <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-neutral-300 bg-white text-sm font-medium text-neutral-500 hover:bg-neutral-50 transition-standard">
+            <i class="fa fa-chevron-left text-xs"></i>
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-neutral-300 bg-primary text-sm font-medium text-white">
+            1
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-standard">
+            2
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-standard">
+            3
+          </a>
+          <span class="relative inline-flex items-center px-4 py-2 border border-neutral-300 bg-white text-sm font-medium text-neutral-700">
+            ...
+          </span>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-neutral-300 bg-white text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-standard">
+            12
+          </a>
+          <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-neutral-300 bg-white text-sm font-medium text-neutral-500 hover:bg-neutral-50 transition-standard">
+            <i class="fa fa-chevron-right text-xs"></i>
+          </a>
+        </nav>
+      </div>
+    </div>
+    
+    <!-- 无搜索结果状态 -->
+    <div id="noResults" class="hidden text-center py-16">
+      <div class="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="fa fa-search text-3xl text-neutral-400"></i>
+      </div>
+      <h3 class="text-xl font-bold text-neutral-800 mb-2">未找到匹配的产品</h3>
+      <p class="text-neutral-500 max-w-md mx-auto mb-8">尝试使用不同的关键词或调整筛选条件，以获得更多结果</p>
+      <button class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition-standard">
+        清除筛选条件
+      </button>
+    </div>
+    
+    <!-- 加载状态 -->
+    <div id="loadingState" class="hidden text-center py-16">
+      <div class="w-12 h-12 border-4 border-neutral-200 border-t-primary rounded-full animate-spin mx-auto mb-6"></div>
+      <p class="text-neutral-600">正在搜索产品，请稍候...</p>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-neutral-800 text-neutral-300 py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <i class="fa fa-search text-primary text-xl"></i>
+            <h3 class="text-lg font-bold text-white">VectorSearch<span class="text-primary">AI</span></h3>
+          </div>
+          <p class="text-sm text-neutral-400 mb-4">
+            专业的产品向量搜索平台，帮助您管理和检查产品在大模型中的收录情况。
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-neutral-400 hover:text-primary transition-standard">
+              <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#" class="text-neutral-400 hover:text-primary transition-standard">
+              <i class="fa fa-github"></i>
+            </a>
+            <a href="#" class="text-neutral-400 hover:text-primary transition-standard">
+              <i class="fa fa-linkedin"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-semibold mb-4">产品</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">功能介绍</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">使用教程</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">API文档</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">更新日志</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-semibold mb-4">资源</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">帮助中心</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">常见问题</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">技术博客</a></li>
+            <li><a href="#" class="text-neutral-400 hover:text-white transition-standard">社区论坛</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-semibold mb-4">联系我们</h4>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start">
+              <i class="fa fa-envelope-o mt-1 mr-2 text-neutral-400"></i>
+              <span class="text-neutral-400">support@vectorsearchai.com</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-phone mt-1 mr-2 text-neutral-400"></i>
+              <span class="text-neutral-400">+86 123 4567 8910</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-map-marker mt-1 mr-2 text-neutral-400"></i>
+              <span class="text-neutral-400">北京市海淀区科技园区88号</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-neutral-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-sm text-neutral-500 mb-4 md:mb-0">© 2023 VectorSearchAI. 保留所有权利。</p>
+        <div class="flex space-x-6 text-sm">
+          <a href="#" class="text-neutral-500 hover:text-neutral-300 transition-standard">隐私政策</a>
+          <a href="#" class="text-neutral-500 hover:text-neutral-300 transition-standard">服务条款</a>
+          <a href="#" class="text-neutral-500 hover:text-neutral-300 transition-standard">Cookie政策</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 搜索表单提交处理
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 获取搜索关键词
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      
+      if (searchTerm) {
+        // 显示加载状态
+        document.getElementById('searchResults').classList.add('hidden');
+        document.getElementById('noResults').classList.add('hidden');
+        document.getElementById('loadingState').classList.remove('hidden');
+        
+        // 模拟搜索延迟
+        setTimeout(() => {
+          // 隐藏加载状态，显示搜索结果
+          document.getElementById('loadingState').classList.add('hidden');
+          document.getElementById('searchResults').classList.remove('hidden');
+          
+          // 实际应用中可以添加AJAX请求获取真实搜索结果
+        }, 1500);
+      }
+    });
+    
+    // 为搜索结果项添加点击事件
+    document.querySelectorAll('#searchResults .card-hover-effect').forEach(card => {
+      card.addEventListener('click', function(e) {
+        // 如果点击的是按钮，不触发卡片点击事件
+        if (e.target.closest('button')) return;
+        
+        // 这里可以添加查看产品详情的逻辑
+        const productName = this.querySelector('h3').textContent;
+        console.log(`查看产品详情: ${productName}`);
+        // 实际应用中可以跳转到详情页或显示详情模态框
+      });
+    });
+    
+    // 模拟"仅显示已收录产品"筛选功能
+    document.querySelector('input[type="checkbox"]').addEventListener('change', function() {
+      const isChecked = this.checked;
+      const productCards = document.querySelectorAll('#searchResults .card-hover-effect');
+      
+      productCards.forEach(card => {
+        const isIncluded = card.querySelector('.bg-secondary/10') !== null;
+        
+        if (isChecked && !isIncluded) {
+          card.classList.add('hidden');
+        } else {
+          card.classList.remove('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

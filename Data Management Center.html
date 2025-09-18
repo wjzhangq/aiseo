@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据管理系统</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            neutral: '#86909C',
+            light: '#F2F3F5',
+            dark: '#1D2129',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .btn-hover {
+        @apply transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5;
+      }
+      .section-fade {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="font-inter bg-gray-50 text-dark">
+  <!-- 初始页面 -->
+  <div id="landing-page" class="min-h-screen flex flex-col items-center justify-center p-4 section-fade">
+    <div class="max-w-4xl w-full text-center">
+      <div class="mb-8">
+        <i class="fa fa-database text-primary text-6xl mb-4"></i>
+        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark mb-4">数据管理系统</h1>
+        <p class="text-neutral text-lg md:text-xl max-w-2xl mx-auto">
+          高效的数据接入、清洗与标准化处理平台，助力企业数据管理自动化
+        </p>
+      </div>
+      
+      <button id="start-btn" class="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-lg btn-hover text-lg">
+        <i class="fa fa-rocket mr-2"></i>开始使用
+      </button>
+      
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl card-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+            <i class="fa fa-plug text-primary text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">数据接入</h3>
+          <p class="text-neutral">便捷的多渠道数据接入方式，支持各类格式数据导入</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl card-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+            <i class="fa fa-filter text-primary text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">数据清洗</h3>
+          <p class="text-neutral">智能数据清洗工具，快速处理异常值、重复值和缺失值</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl card-shadow">
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+            <i class="fa fa-cogs text-primary text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">标准化处理</h3>
+          <p class="text-neutral">统一数据格式与标准，提升数据质量和可用性</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 数据管理系统页面 -->
+  <div id="system-page" class="min-h-screen hidden">
+    <!-- 顶部导航 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center">
+          <i class="fa fa-database text-primary text-2xl mr-2"></i>
+          <h1 class="text-xl font-bold">数据管理系统</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="text-neutral hover:text-primary transition-colors">
+            <i class="fa fa-question-circle"></i>
+            <span class="ml-1 hidden sm:inline">帮助</span>
+          </button>
+          <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <i class="fa fa-user"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+      <div class="mb-8">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold mb-2">产品发布中心</h2>
+        <p class="text-neutral">管理您的所有数据处理流程和任务</p>
+      </div>
+      
+      <!-- 功能模块 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- 数据接入模块 -->
+        <div class="bg-white rounded-xl p-6 card-shadow hover:border-primary/30 border border-transparent transition-all">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+              <i class="fa fa-plug text-primary text-xl"></i>
+            </div>
+            <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">核心功能</span>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">产品发布</h3>
+          <p class="text-neutral mb-4">快速录入和导入各类产品数据，支持多种格式</p>
+          <button id="data-access-btn" class="text-primary font-medium flex items-center btn-hover">
+            <span>进入管理</span>
+            <i class="fa fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+        
+        <!-- 数据清洗模块 -->
+        <div class="bg-white rounded-xl p-6 card-shadow hover:border-primary/30 border border-transparent transition-all">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+              <i class="fa fa-filter text-primary text-xl"></i>
+            </div>
+            <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">核心功能</span>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">数据清洗</h3>
+          <p class="text-neutral mb-4">处理异常数据，确保数据准确性和一致性</p>
+          <button class="text-primary font-medium flex items-center btn-hover">
+            <span>进入管理</span>
+            <i class="fa fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+        
+        <!-- 标准化处理模块 -->
+        <div class="bg-white rounded-xl p-6 card-shadow hover:border-primary/30 border border-transparent transition-all">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+              <i class="fa fa-cogs text-primary text-xl"></i>
+            </div>
+            <span class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full">核心功能</span>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">标准化处理</h3>
+          <p class="text-neutral mb-4">统一数据格式和标准，提升数据可用性</p>
+          <button class="text-primary font-medium flex items-center btn-hover">
+            <span>进入管理</span>
+            <i class="fa fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 数据统计 -->
+      <div class="bg-white rounded-xl p-6 card-shadow mb-8">
+        <h3 class="font-semibold text-lg mb-4">数据统计概览</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 border border-gray-100 rounded-lg">
+            <p class="text-neutral text-sm mb-1">总数据量</p>
+            <p class="text-2xl font-bold">1,284</p>
+            <p class="text-green-500 text-xs mt-1"><i class="fa fa-arrow-up"></i> 12% 较上月</p>
+          </div>
+          <div class="p-4 border border-gray-100 rounded-lg">
+            <p class="text-neutral text-sm mb-1">已清洗数据</p>
+            <p class="text-2xl font-bold">956</p>
+            <p class="text-green-500 text-xs mt-1"><i class="fa fa-arrow-up"></i> 8% 较上月</p>
+          </div>
+          <div class="p-4 border border-gray-100 rounded-lg">
+            <p class="text-neutral text-sm mb-1">标准化完成</p>
+            <p class="text-2xl font-bold">728</p>
+            <p class="text-green-500 text-xs mt-1"><i class="fa fa-arrow-up"></i> 15% 较上月</p>
+          </div>
+          <div class="p-4 border border-gray-100 rounded-lg">
+            <p class="text-neutral text-sm mb-1">处理中任务</p>
+            <p class="text-2xl font-bold">12</p>
+            <p class="text-red-500 text-xs mt-1"><i class="fa fa-arrow-down"></i> 3% 较上月</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 最近数据列表 -->
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-semibold text-lg">最近数据</h3>
+          <button class="text-primary text-sm">查看全部</button>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th class="py-3 text-left text-sm font-medium text-neutral">产品名称</th>
+                <th class="py-3 text-left text-sm font-medium text-neutral">类别</th>
+                <th class="py-3 text-left text-sm font-medium text-neutral">状态</th>
+                <th class="py-3 text-left text-sm font-medium text-neutral">更新时间</th>
+                <th class="py-3 text-left text-sm font-medium text-neutral">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 text-sm">智能监控摄像头</td>
+                <td class="py-3 text-sm">安防设备</td>
+                <td class="py-3 text-sm"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">已完成</span></td>
+                <td class="py-3 text-sm text-neutral">2023-06-15</td>
+                <td class="py-3 text-sm">
+                  <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                  <button class="text-neutral hover:text-neutral/80">查看</button>
+                </td>
+              </tr>
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 text-sm">无线蓝牙耳机</td>
+                <td class="py-3 text-sm">音频设备</td>
+                <td class="py-3 text-sm"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">已完成</span></td>
+                <td class="py-3 text-sm text-neutral">2023-06-14</td>
+                <td class="py-3 text-sm">
+                  <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                  <button class="text-neutral hover:text-neutral/80">查看</button>
+                </td>
+              </tr>
+              <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 text-sm">便携式投影仪</td>
+                <td class="py-3 text-sm">显示设备</td>
+                <td class="py-3 text-sm"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">清洗中</span></td>
+                <td class="py-3 text-sm text-neutral">2023-06-14</td>
+                <td class="py-3 text-sm">
+                  <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                  <button class="text-neutral hover:text-neutral/80">查看</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="container mx-auto px-4 py-6">
+        <p class="text-center text-neutral text-sm">© 2023 数据管理系统 版权所有</p>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- 数据接入弹窗 -->
+  <div id="data-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto section-fade">
+      <div class="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10">
+        <h3 class="text-xl font-bold">数据录入</h3>
+        <button id="close-modal" class="text-neutral hover:text-dark transition-colors">
+          <i class="fa fa-times text-xl"></i>
+        </button>
+      </div>
+      
+      <form id="data-form" class="p-6 space-y-6">
+        <!-- 产品名称 -->
+        <div>
+          <label for="product-name" class="block text-sm font-medium text-dark mb-1">产品名称 </label>
+          <input type="text" id="product-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/ focus:border-primary outline-none transition-all" placeholder="联想thinkplus锋行者140W移动电源">
+        </div>
+        
+        <!-- 产品类别 -->
+        <div>
+          <label for="product-category" class="block text-sm font-medium text-dark mb-1">产品类别 <span class="text-red-500">*</span></label>
+          <select id="product-category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all">
+            <option value="">请选择产品类别</option>
+            <option value="electronics">电子产品</option>
+            <option value="appliances">家用电器</option>
+            <option value="furniture">家具</option>
+            <option value="clothing">服装鞋帽</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+        
+        <!-- 产品图片上传 -->
+        <div>
+          <label class="block text-sm font-medium text-dark mb-1">产品图片上传</label>
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
+            <input type="file" id="product-image" class="hidden" accept="image/*">
+            <label for="product-image" class="cursor-pointer">
+              <i class="fa fa-cloud-upload text-3xl text-neutral mb-2"></i>
+              <p class="text-sm text-neutral mb-1">点击或拖拽文件到此处上传</p>
+              <p class="text-xs text-gray-400">支持 JPG、PNG 格式，最大 5MB</p>
+            </label>
+            <div id="image-preview" class="mt-4 hidden">
+              <img id="preview-img" src="" alt="产品图片预览" class="max-h-40 mx-auto rounded">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 产品规格 -->
+        <div>
+          <label for="product-spec" class="block text-sm font-medium text-dark mb-1">产品规格 <span class="text-red-500">*</span></label>
+          <input type="text" id="product-spec" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="Thinkplus FLUXO140W详细参数 
+Thinkplus 
+Thinkplus 锋行者大功率笔记本移动电源140W 20000mAh 
+Thinklus FLUXO High Power Portable Power Bank 140W 20000mAh 
+移动电源 
+20000mAh 
+12000mAh 
+GB/T 35590-2017 & GB/T 31241-2022 & 联想移动电源企标 
+Type-C1：5V/3A、9V/3A、12V/3A、15V/3A、20V/5A（100W Max.） 
+Type-C2：5V/3A、9V/3A、12V/3A、15V/3A、20V/5A（100W Max.） 
+Type-C1: 5V/3A、9V/3A、12V/3A、15V/3A、20V/7A（140W Max.） 
+（支持 MOTO 协议 20V/6.25A）（支持拯救者协议：20V/7A） 
+USB-C2: 5V/3A、9V/3A、12V/3A、15V/3A、20V/3.25A（65W Max.) 
+（支持MOTO协议 20V/3.4A） 
+USB-A: 5V/3A、9V/3A、10V/2.25A，12V/2.5A（30W Max.)  
+USB-C1+USB-C2: 65W+65W（130W Max.)  
+USB-C1+USB-A: 100W+30W（130W Max.)  
+USB-C2+USB-A: 65W+30W（95W Max.)  
+USB-C1+USB-C2+USB-A: 65W+40W+30W（135W Max.） 
+154×51×39mm（±2mm） 
+未接入充电器情况下，单独移动电源模式 
+接入充电器情况下，移动电源电芯+充电器双DC混动输出 
+中国 
+1.	FLUXO 140W移动电源×1 
+2.	1.5m的 USB-C to USB-C 240W线材×1 
+3.	便携收纳袋×1 
+349元 
+">
+        </div>
+        
+        <!-- 产品功能描述 -->
+        <div>
+          <label for="product-desc" class="block text-sm font-medium text-dark mb-1">产品功能描述 <span class="text-red-500">*</span></label>
+          <textarea id="product-desc" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all resize-none" placeholder="锋行者140W将安全视为“隐形性能”，通过车规电芯+三重电路防护+温控熔断+结构强化的组合，实现了从电芯到接口的全链路防护。尤其混动模式下的双DC供电设计，既分担了电池负载压力，又避免单点故障引发的连锁风险。对于追求高性能输出与零隐患安全的用户（如差旅人群、多设备玩家），这些设计让“140W高功率”不再是参数噱头，而是真正可靠的“移动能源中枢”。"></textarea>
+        </div>
+        
+        <!-- 适用场景（多选） -->
+        <div>
+          <label class="block text-sm font-medium text-dark mb-3">适用场景（可多选）</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="home" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">家庭</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="office" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">办公室</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="commercial" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">商业场所</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="outdoor" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">户外</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="industrial" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">工业环境</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="other" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">其他场景</span>
+            </label>
+          </div>
+        </div>
+
+<!-- 目标平台（多选） -->
+        <div>
+          <label class="block text-sm font-medium text-dark mb-3">目标平台（可多选）</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="home" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">小红书</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="office" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">微博</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="commercial" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">抖音</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="outdoor" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">Tik Tok</span>
+            </label>
+            <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-primary/50 transition-colors">
+              <input type="checkbox" name="scenarios" value="industrial" class="w-4 h-4 text-primary focus:ring-primary/50">
+              <span class="ml-2">X</span>
+            </label>
+          </div>
+        </div>
+
+        
+        <!-- 行业关键词 -->
+        <div>
+          <label for="product-keywords" class="block text-sm font-medium text-dark mb-1">行业关键词</label>
+          <input type="text" id="product-keywords" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入相关行业关键词，用逗号分隔">
+        </div>
+      </form>
+      
+      <div class="p-6 border-t border-gray-200 flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
+        <button id="save-draft" class="px-6 py-2 border border-gray-300 rounded-lg text-dark font-medium hover:bg-gray-50 transition-colors">
+          保存草稿
+        </button>
+        <button id="submit-data" class="px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors">
+          提交数据
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript -->
+  <script>
+    // 页面跳转逻辑
+    const landingPage = document.getElementById('landing-page');
+    const systemPage = document.getElementById('system-page');
+    const startBtn = document.getElementById('start-btn');
+    
+    startBtn.addEventListener('click', () => {
+      landingPage.classList.add('hidden');
+      systemPage.classList.remove('hidden');
+      systemPage.classList.add('section-fade');
+      // 滚动到顶部
+      window.scrollTo(0, 0);
+    });
+    
+    // 数据接入弹窗逻辑
+    const dataModal = document.getElementById('data-modal');
+    const dataAccessBtn = document.getElementById('data-access-btn');
+    const closeModal = document.getElementById('close-modal');
+    const saveDraft = document.getElementById('save-draft');
+    const submitData = document.getElementById('submit-data');
+    
+    // 打开弹窗
+    dataAccessBtn.addEventListener('click', () => {
+      dataModal.classList.remove('hidden');
+      dataModal.classList.add('flex');
+      // 阻止背景滚动
+      document.body.style.overflow = 'hidden';
+    });
+    
+    // 关闭弹窗
+    function closeDataModal() {
+      dataModal.classList.add('hidden');
+      dataModal.classList.remove('flex');
+      // 恢复背景滚动
+      document.body.style.overflow = '';
+    }
+    
+    closeModal.addEventListener('click', closeDataModal);
+    
+    // 点击弹窗外部关闭
+    dataModal.addEventListener('click', (e) => {
+      if (e.target === dataModal) {
+        closeDataModal();
+      }
+    });
+    
+    // 图片上传预览
+    const productImage = document.getElementById('product-image');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    
+    productImage.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+          previewImg.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+        }
+        
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+       // 表单提交逻辑
+    saveDraft.addEventListener('click', () => {
+      // 简单验证必填字段
+      const requiredFields = [
+        
+      ];
+      
+      let isValid = true;
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('border-red-500');
+          isValid = false;
+        } else {
+          field.classList.remove('border-red-500');
+        }
+      });
+      
+      if (isValid) {
+        alert('草稿已保存');
+        closeDataModal();
+      } else {
+        alert('请填写所有必填字段');
+      }
+    });
+    
+    submitData.addEventListener('click', () => {
+      // 简单验证必填字段
+      const requiredFields = [
+          ];
+      
+      let isValid = true;
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('border-red-500');
+          isValid = false;
+        } else {
+          field.classList.remove('border-red-500');
+        }
+      });
+ 
+      
+      if (isValid) {
+        alert('数据已提交，将进入数据清洗流程');
+        // 重置表单
+        document.getElementById('data-form').reset();
+        imagePreview.classList.add('hidden');
+        closeDataModal();
+      } else {
+        alert('请填写所有必填字段');
+      }
+    });
+  </script>
+</body>
+</html>

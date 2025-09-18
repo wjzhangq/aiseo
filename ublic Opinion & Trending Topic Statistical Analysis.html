@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI搜索平台 - 舆情/热点统计模块</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            warning: '#FF7D00',
+            danger: '#F53F3F',
+            success: '#00B42A',
+            dark: '#1D2129',
+            'dark-2': '#4E5969',
+            'light-1': '#F2F3F5',
+            'light-2': '#E5E6EB',
+            'light-3': '#C9CDD4',
+            'xiaohongshu': '#FF2442',
+            'weibo': '#E6162D',
+            'meta': '#1877F2',
+            'x': '#1DA1F2',
+            'douyin': '#000000',
+            'tiktok': '#000000'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #165DFF 0%, #0F48D2 100%);
+      }
+      .platform-ring {
+        position: relative;
+        width: 60px;
+        height: 60px;
+      }
+      .platform-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-dark overflow-x-hidden">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- 左侧Logo和标题 -->
+        <div class="flex items-center space-x-3">
+          <div class="gradient-bg w-10 h-10 rounded-lg flex items-center justify-center">
+            <i class="fa fa-fire text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold text-dark">AI搜索平台</h1>
+            <p class="text-xs text-dark-2">舆情/热点统计模块</p>
+          </div>
+        </div>
+        
+        <!-- 右侧用户信息和通知 -->
+        <div class="flex items-center space-x-6">
+          <div class="relative">
+            <button class="text-dark-2 hover:text-primary transition-colors">
+              <i class="fa fa-bell text-xl"></i>
+              <span class="absolute -top-1 -right-1 bg-danger text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">7</span>
+            </button>
+          </div>
+          <div class="flex items-center space-x-2">
+            <img src="https://picsum.photos/id/1005/200/200" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
+            <span class="text-sm font-medium">舆情分析师</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <div class="pt-16 flex min-h-screen">
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-white shadow-sm fixed h-full left-0 top-16 z-40 overflow-y-auto transition-all duration-300">
+      <nav class="py-6 px-4">
+        <div class="space-y-1">
+          <p class="text-xs uppercase text-dark-2 font-semibold px-3 mb-2">主导航</p>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-medium">
+            <i class="fa fa-dashboard w-5 text-center"></i>
+            <span>舆情概览</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-line-chart w-5 text-center"></i>
+            <span>热点趋势</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-exclamation-triangle w-5 text-center"></i>
+            <span>舆情预警</span>
+            <span class="ml-auto bg-danger/20 text-danger text-xs px-2 py-0.5 rounded-full">7条未处理</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-sitemap w-5 text-center"></i>
+            <span>平台监控</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-file-text w-5 text-center"></i>
+            <span>舆情报表</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-comments w-5 text-center"></i>
+            <span>用户反馈</span>
+          </a>
+        </div>
+        
+        <div class="mt-8 space-y-1">
+          <p class="text-xs uppercase text-dark-2 font-semibold px-3 mb-2">系统设置</p>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-cog w-5 text-center"></i>
+            <span>监控配置</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>用户管理</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-history w-5 text-center"></i>
+            <span>操作日志</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="flex-1 ml-64 p-6">
+      <!-- 页面标题 -->
+      <div class="mb-6">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-dark">舆情/热点统计分析</h2>
+        <p class="text-dark-2 mt-1">实时监控热点话题，分析舆情走向，智能预警负面趋势，辅助决策制定</p>
+      </div>
+
+      <!-- 状态概览卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- 今日热点数 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">今日热点数</p>
+              <h3 class="text-2xl font-bold mt-1 text-primary">24 个</h3>
+              <p class="text-xs text-dark-2 mt-2">较昨日 +5 个</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-fire text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 负面舆情 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">负面舆情</p>
+              <h3 class="text-2xl font-bold mt-1 text-danger">8 条</h3>
+              <p class="text-xs text-dark-2 mt-2">较昨日 +2 条</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center text-danger">
+              <i class="fa fa-thumbs-down text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 舆情预警 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">舆情预警</p>
+              <h3 class="text-2xl font-bold mt-1 text-warning">7 条</h3>
+              <p class="text-xs text-dark-2 mt-2">未处理：5 条</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+              <i class="fa fa-exclamation-triangle text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 今日舆情量 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">今日舆情量</p>
+              <h3 class="text-2xl font-bold mt-1 text-secondary">12,589 条</h3>
+              <p class="text-xs text-dark-2 mt-2">较昨日 +12.3%</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+              <i class="fa fa-comments text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 多平台实时舆情监控 -->
+      <section class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">多平台实时舆情监控</h3>
+          <div class="flex items-center space-x-3">
+            <span class="text-sm text-dark-2">更新时间: <span class="text-primary">2024-06-15 16:30</span></span>
+            <button class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+              <i class="fa fa-refresh mr-1"></i>刷新数据
+            </button>
+          </div>
+        </div>
+        
+        <!-- 平台监控卡片网格 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+          <!-- 小红书 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="xiaohongshuChart"></canvas>
+                <i class="fa fa-heart platform-icon text-xiaohongshu"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">小红书</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">3,245 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">72.3%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">8.7%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">5 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+          
+          <!-- 微博 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="weiboChart"></canvas>
+                <i class="fa fa-weibo platform-icon text-weibo"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">微博</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning">关注</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">5,872 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">58.5%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">18.2%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">8 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+          
+          <!-- Meta -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="metaChart"></canvas>
+                <i class="fa fa-facebook platform-icon text-meta"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">Meta</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">2,156 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">65.8%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">12.1%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">3 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+          
+          <!-- X -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="xChart"></canvas>
+                <i class="fa fa-twitter platform-icon text-x"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">X</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">1,987 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">62.4%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">14.5%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">4 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+          
+          <!-- 抖音 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="douyinChart"></canvas>
+                <i class="fa fa-music platform-icon text-douyin"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">抖音</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-danger/10 text-danger">预警</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">6,321 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">48.7%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">22.3%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">7 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+          
+          <!-- TikTok -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex justify-between items-center mb-4">
+              <div class="platform-ring">
+                <canvas id="tiktokChart"></canvas>
+                <i class="fa fa-music platform-icon text-tiktok bg-black text-white p-1 rounded-full"></i>
+              </div>
+              <div>
+                <h4 class="font-medium">TikTok</h4>
+                <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">舆情总量</span>
+                <span class="text-sm font-medium">2,876 条</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">正面占比</span>
+                <span class="text-sm font-medium text-success">68.9%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">负面占比</span>
+                <span class="text-sm font-medium text-danger">9.4%</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-dark-2">热点话题</span>
+                <span class="text-sm font-medium">6 个</span>
+              </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-t border-light-1">
+              <button class="w-full text-xs text-primary hover:underline">查看详情</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 舆情趋势监控区域 -->
+      <section class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">舆情趋势监控</h3>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 text-sm rounded-md bg-primary text-white">今日</button>
+            <button class="px-3 py-1 text-sm rounded-md text-dark-2 hover:bg-gray-100">本周</button>
+            <button class="px-3 py-1 text-sm rounded-md text-dark-2 hover:bg-gray-100">本月</button>
+          </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- 舆情情感分布和热度趋势 -->
+          <div class="bg-white rounded-xl p-5 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-medium">舆情情感分布</h4>
+              <div class="flex space-x-1">
+                <span class="flex items-center text-xs text-dark-2">
+                  <span class="w-3 h-3 rounded-full bg-success inline-block mr-1"></span>正面
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-warning inline-block mr-1"></span>中性
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-danger inline-block mr-1"></span>负面
+                </span>
+              </div>
+            </div>
+            <div class="h-64">
+              <canvas id="sentimentChart"></canvas>
+            </div>
+          </div>
+          
+          <!-- 热点话题热度趋势 -->
+          <div class="bg-white rounded-xl p-5 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-medium">热点话题热度趋势</h4>
+              <div class="flex space-x-1">
+                <span class="flex items-center text-xs text-dark-2">
+                  <span class="w-3 h-3 rounded-full bg-primary inline-block mr-1"></span>话题A
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-secondary inline-block mr-1"></span>话题B
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-warning inline-block mr-1"></span>话题C
+                </span>
+              </div>
+            </div>
+            <div class="h-64">
+              <canvas id="hotTopicsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 舆情指标详情卡片 -->
+      <section class="mb-8">
+        <h3 class="text-lg font-semibold mb-4">舆情指标详情</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- 正面舆情占比 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">正面舆情占比</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">良好</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">68.5%</span>
+              <span class="text-xs text-success mb-1"><i class="fa fa-arrow-up"></i> 3.2%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-success h-2.5 rounded-full" style="width: 68.5%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">较昨日 <span class="text-success">+3.2%</span></p>
+          </div>
+          
+          <!-- 负面舆情占比 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">负面舆情占比</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning">关注</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">12.3%</span>
+              <span class="text-xs text-danger mb-1"><i class="fa fa-arrow-up"></i> 1.8%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-danger h-2.5 rounded-full" style="width: 12.3%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">较昨日 <span class="text-danger">+1.8%</span></p>
+          </div>
+          
+          <!-- 舆情扩散速度 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">舆情扩散速度</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning">较快</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">7.8 级</span>
+              <span class="text-xs text-danger mb-1"><i class="fa fa-arrow-up"></i> 0.5级</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-warning h-2.5 rounded-full" style="width: 78%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">风险等级：中高风险</p>
+          </div>
+          
+          <!-- 热点话题增长率 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">热点增长率</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">稳定</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">15.2%</span>
+              <span class="text-xs text-success mb-1"><i class="fa fa-arrow-down"></i> 2.1%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-primary h-2.5 rounded-full" style="width: 65%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">较昨日 <span class="text-success">-2.1%</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 热点话题和舆情预警区域 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- 最新舆情预警 -->
+        <div class="lg:col-span-1 bg-white rounded-xl p-5 card-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">最新舆情预警</h3>
+            <a href="#" class="text-xs text-primary">查看全部</a>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- 预警项1 -->
+            <div class="p-3 border border-danger/20 bg-danger/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-danger">负面舆情快速扩散</p>
+                  <p class="text-xs text-dark-2 mt-1">"产品质量问题"相关负面信息1小时内增长200%</p>
+                  <p class="text-xs text-dark-2 mt-1">主要来源: <span class="text-douyin">抖音</span>, <span class="text-weibo">微博</span></p>
+                </div>
+                <span class="text-xs text-dark-2">15分钟前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">处理</button>
+              </div>
+            </div>
+            
+            <!-- 预警项2 -->
+            <div class="p-3 border border-danger/20 bg-danger/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-danger">重大负面新闻出现</p>
+                  <p class="text-xs text-dark-2 mt-1">主流媒体报道相关负面新闻，传播力强</p>
+                  <p class="text-xs text-dark-2 mt-1">主要来源: <span class="text-weibo">微博</span>, <span class="text-x">X</span></p>
+                </div>
+                <span class="text-xs text-dark-2">45分钟前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">处理</button>
+              </div>
+            </div>
+            
+            <!-- 预警项3 -->
+            <div class="p-3 border border-warning/20 bg-warning/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-warning">热点话题关联风险</p>
+                  <p class="text-xs text-dark-2 mt-1">当前热点话题可能关联品牌负面信息</p>
+                  <p class="text-xs text-dark-2 mt-1">主要来源: <span class="text-xiaohongshu">小红书</span>, <span class="text-tiktok">TikTok</span></p>
+                </div>
+                <span class="text-xs text-dark-2">2小时前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">已处理</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 热门话题排行 -->
+        <div class="lg:col-span-2 bg-white rounded-xl p-5 card-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">热门话题排行</h3>
+            <div class="flex space-x-2">
+              <button class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                <i class="fa fa-refresh mr-1"></i>刷新
+              </button>
+            </div>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- 话题1 -->
+            <div class="flex items-center p-3 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold mr-4">1</div>
+              <div class="flex-grow">
+                <h4 class="font-medium">新一代AI搜索算法发布</h4>
+                <div class="flex items-center mt-1 flex-wrap gap-2">
+                  <span class="text-xs text-dark-2"><i class="fa fa-eye mr-1"></i> 浏览量: 125,890</span>
+                  <span class="text-xs text-dark-2"><i class="fa fa-comment mr-1"></i> 讨论量: 8,452</span>
+                  <span class="text-xs text-success"><i class="fa fa-arrow-up mr-1"></i> 热度上升</span>
+                  <span class="text-xs text-dark-2">主要平台: 
+                    <i class="fa fa-weibo text-weibo"></i>
+                    <i class="fa fa-music text-douyin ml-1"></i>
+                    <i class="fa fa-heart text-xiaohongshu ml-1"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">技术</span>
+              </div>
+            </div>
+            
+            <!-- 话题2 -->
+            <div class="flex items-center p-3 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/80 text-white flex items-center justify-center font-bold mr-4">2</div>
+              <div class="flex-grow">
+                <h4 class="font-medium">AI搜索准确率行业对比</h4>
+                <div class="flex items-center mt-1 flex-wrap gap-2">
+                  <span class="text-xs text-dark-2"><i class="fa fa-eye mr-1"></i> 浏览量: 98,751</span>
+                  <span class="text-xs text-dark-2"><i class="fa fa-comment mr-1"></i> 讨论量: 6,231</span>
+                  <span class="text-xs text-success"><i class="fa fa-arrow-up mr-1"></i> 热度上升</span>
+                  <span class="text-xs text-dark-2">主要平台: 
+                    <i class="fa fa-twitter text-x"></i>
+                    <i class="fa fa-facebook text-meta ml-1"></i>
+                    <i class="fa fa-weibo text-weibo ml-1"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <span class="px-2 py-1 text-xs rounded-full bg-secondary/10 text-secondary">行业</span>
+              </div>
+            </div>
+            
+            <!-- 话题3 -->
+            <div class="flex items-center p-3 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary/60 text-white flex items-center justify-center font-bold mr-4">3</div>
+              <div class="flex-grow">
+                <h4 class="font-medium">搜索隐私保护新功能</h4>
+                <div class="flex items-center mt-1 flex-wrap gap-2">
+                  <span class="text-xs text-dark-2"><i class="fa fa-eye mr-1"></i> 浏览量: 76,324</span>
+                  <span class="text-xs text-dark-2"><i class="fa fa-comment mr-1"></i> 讨论量: 4,987</span>
+                  <span class="text-xs text-success"><i class="fa fa-arrow-up mr-1"></i> 热度上升</span>
+                  <span class="text-xs text-dark-2">主要平台: 
+                    <i class="fa fa-music text-tiktok bg-black text-white p-0.5 rounded-sm"></i>
+                    <i class="fa fa-facebook text-meta ml-1"></i>
+                    <i class="fa fa-heart text-xiaohongshu ml-1"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <span class="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning">功能</span>
+              </div>
+            </div>
+            
+            <!-- 话题4 -->
+            <div class="flex items-center p-3 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-light-3 text-dark flex items-center justify-center font-bold mr-4">4</div>
+              <div class="flex-grow">
+                <h4 class="font-medium">企业版AI搜索应用案例</h4>
+                <div class="flex items-center mt-1 flex-wrap gap-2">
+                  <span class="text-xs text-dark-2"><i class="fa fa-eye mr-1"></i> 浏览量: 65,478</span>
+                  <span class="text-xs text-dark-2"><i class="fa fa-comment mr-1"></i> 讨论量: 3,254</span>
+                  <span class="text-xs text-danger"><i class="fa fa-arrow-down mr-1"></i> 热度下降</span>
+                  <span class="text-xs text-dark-2">主要平台: 
+                    <i class="fa fa-twitter text-x"></i>
+                    <i class="fa fa-facebook text-meta ml-1"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">案例</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 舆情来源分布和用户反馈 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- 舆情来源分布 -->
+        <div class="bg-white rounded-xl p-5 card-shadow">
+          <h3 class="font-semibold mb-4">舆情来源分布</h3>
+          <div class="h-64">
+            <canvas id="sourceDistributionChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- 舆情处理与反馈 -->
+        <div class="bg-white rounded-xl p-5 card-shadow">
+          <h3 class="font-semibold mb-4">舆情处理与反馈</h3>
+          
+          <!-- 处理流程 - 图标与箭头穿插排列 -->
+          <div class="flex flex-col md:flex-row items-center justify-center mb-6 space-y-4 md:space-y-0">
+            <!-- 舆情发现 -->
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-2">
+                <i class="fa fa-bullhorn"></i>
+              </div>
+              <p class="text-sm font-medium">舆情发现</p>
+            </div>
+            
+            <!-- 箭头 -->
+            <div class="hidden md:flex items-center mx-2 text-primary">
+              <i class="fa fa-long-arrow-right"></i>
+            </div>
+            <div class="md:hidden flex items-center text-primary">
+              <i class="fa fa-long-arrow-down"></i>
+            </div>
+            
+            <!-- 分析评估 -->
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-2">
+                <i class="fa fa-line-chart"></i>
+              </div>
+              <p class="text-sm font-medium">分析评估</p>
+            </div>
+            
+            <!-- 箭头 -->
+            <div class="hidden md:flex items-center mx-2 text-primary">
+              <i class="fa fa-long-arrow-right"></i>
+            </div>
+            <div class="md:hidden flex items-center text-primary">
+              <i class="fa fa-long-arrow-down"></i>
+            </div>
+            
+            <!-- 处理响应 -->
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-2">
+                <i class="fa fa-cogs"></i>
+              </div>
+              <p class="text-sm font-medium">处理响应</p>
+            </div>
+            
+            <!-- 箭头 -->
+            <div class="hidden md:flex items-center mx-2 text-primary">
+              <i class="fa fa-long-arrow-right"></i>
+            </div>
+            <div class="md:hidden flex items-center text-primary">
+              <i class="fa fa-long-arrow-down"></i>
+            </div>
+            
+            <!-- 跟踪反馈 -->
+            <div class="flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center text-white mb-2">
+                <i class="fa fa-check-circle"></i>
+              </div>
+              <p class="text-sm font-medium">跟踪反馈</p>
+            </div>
+          </div>
+          
+          <!-- 最近处理记录 -->
+          <div>
+            <h4 class="font-medium mb-3">最近处理记录</h4>
+            
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-2 border-b border-light-1">
+                <div class="flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-success mr-2"></span>
+                  <span class="text-sm">负面舆情"搜索结果不准确"已处理</span>
+                </div>
+                <span class="text-xs text-dark-2">今天 10:25</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-2 border-b border-light-1">
+                <div class="flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-success mr-2"></span>
+                  <span class="text-sm">热点话题"AI伦理问题"监控启动</span>
+                </div>
+                <span class="text-xs text-dark-2">昨天 16:40</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-2">
+                <div class="flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-warning mr-2"></span>
+                  <span class="text-sm">用户反馈"隐私保护"问题处理中</span>
+                </div>
+                <span class="text-xs text-dark-2">昨天 09:15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="bg-white border-t border-light-2 py-4 ml-64">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <p class="text-xs text-dark-2">© 2023 AI搜索平台舆情/热点统计模块. 保留所有权利.</p>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">使用帮助</a>
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">隐私政策</a>
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">联系我们</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 页面加载完成后初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化平台舆情情感分布环状图
+      function initPlatformChart(chartId, positive, neutral, negative) {
+        const ctx = document.getElementById(chartId).getContext('2d');
+        return new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [{
+              data: [positive, neutral, negative],
+              backgroundColor: [
+                '#00B42A', // 正面
+                '#FF7D00', // 中性
+                '#F53F3F'  // 负面
+              ],
+              borderWidth: 0,
+              borderRadius: 5,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label: function(context) {
+                    const labels = ['正面', '中性', '负面'];
+                    const value = context.raw;
+                    return `${labels[context.dataIndex]}: ${value}%`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // 初始化各个平台的环状图
+      initPlatformChart('xiaohongshuChart', 72.3, 19.0, 8.7); // 小红书
+      initPlatformChart('weiboChart', 58.5, 23.3, 18.2);       // 微博
+      initPlatformChart('metaChart', 65.8, 22.1, 12.1);        // Meta
+      initPlatformChart('xChart', 62.4, 23.1, 14.5);           // X
+      initPlatformChart('douyinChart', 48.7, 29.0, 22.3);       // 抖音
+      initPlatformChart('tiktokChart', 68.9, 21.7, 9.4);       // TikTok
+
+      // 初始化舆情情感分布图表
+      const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+      const sentimentChart = new Chart(sentimentCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['正面', '中性', '负面'],
+          datasets: [{
+            data: [68.5, 19.2, 12.3],
+            backgroundColor: [
+              '#00B42A',
+              '#FF7D00',
+              '#F53F3F'
+            ],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.label + ': ' + context.raw + '%';
+                }
+              }
+            }
+          },
+          cutout: '70%'
+        }
+      });
+
+      // 初始化热点话题热度趋势图表
+      const hotTopicsCtx = document.getElementById('hotTopicsChart').getContext('2d');
+      const hotTopicsChart = new Chart(hotTopicsCtx, {
+        type: 'line',
+        data: {
+          labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '现在'],
+          datasets: [
+            {
+              label: '话题A',
+              data: [12, 19, 25, 38, 42, 55, 62],
+              borderColor: '#165DFF',
+              backgroundColor: 'rgba(22, 93, 255, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: '话题B',
+              data: [8, 15, 22, 28, 32, 38, 42],
+              borderColor: '#36CFC9',
+              backgroundColor: 'rgba(54, 207, 201, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: '话题C',
+              data: [30, 35, 28, 22, 18, 15, 12],
+              borderColor: '#FF7D00',
+              backgroundColor: 'rgba(255, 125, 0, 0.1)',
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: '热度指数',
+                font: {
+                  size: 10
+                }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+
+      // 初始化舆情来源分布图表
+      const sourceDistributionCtx = document.getElementById('sourceDistributionChart').getContext('2d');
+      const sourceDistributionChart = new Chart(sourceDistributionCtx, {
+        type: 'pie',
+        data: {
+          labels: ['抖音', '微博', '小红书', 'Meta', 'X', 'TikTok', '其他'],
+          datasets: [{
+            data: [28, 22, 15, 10, 8, 12, 5],
+            backgroundColor: [
+              '#000000', // 抖音
+              '#E6162D', // 微博
+              '#FF2442', // 小红书
+              '#1877F2', // Meta
+              '#1DA1F2', // X
+              '#000000', // TikTok
+              '#C9CDD4'  // 其他
+            ],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                boxWidth: 12,
+                padding: 15,
+                font: {
+                  size: 11
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.label + ': ' + context.raw + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 滚动时改变导航栏样式
+      window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 10) {
+          header.classList.add('shadow');
+        } else {
+          header.classList.remove('shadow');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

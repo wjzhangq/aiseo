@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI搜索平台 - 数据监控模块</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            warning: '#FF7D00',
+            danger: '#F53F3F',
+            success: '#00B42A',
+            dark: '#1D2129',
+            'dark-2': '#4E5969',
+            'light-1': '#F2F3F5',
+            'light-2': '#E5E6EB',
+            'light-3': '#C9CDD4'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #165DFF 0%, #0F48D2 100%);
+      }
+      .process-connector {
+        @apply relative flex items-center justify-center w-8 md:w-16;
+      }
+      .process-connector::after {
+        content: '';
+        @apply absolute h-0.5 w-full bg-primary/30;
+      }
+      .connector-arrow {
+        @apply relative z-10 text-primary transition-transform duration-300;
+      }
+      .process-item:hover ~ .process-connector .connector-arrow {
+        @apply transform scale-110;
+      }
+      .process-item {
+        @apply transition-all duration-300;
+      }
+      .process-item:hover {
+        @apply transform scale-105;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-dark overflow-x-hidden">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- 左侧Logo和标题 -->
+        <div class="flex items-center space-x-3">
+          <div class="gradient-bg w-10 h-10 rounded-lg flex items-center justify-center">
+            <i class="fa fa-search text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold text-dark">AI搜索平台</h1>
+            <p class="text-xs text-dark-2">数据监控模块</p>
+          </div>
+        </div>
+        
+        <!-- 右侧用户信息和通知 -->
+        <div class="flex items-center space-x-6">
+          <div class="relative">
+            <button class="text-dark-2 hover:text-primary transition-colors">
+              <i class="fa fa-bell text-xl"></i>
+              <span class="absolute -top-1 -right-1 bg-danger text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
+            </button>
+          </div>
+          <div class="flex items-center space-x-2">
+            <img src="https://picsum.photos/id/1005/200/200" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
+            <span class="text-sm font-medium">AI产品经理</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <div class="pt-16 flex min-h-screen">
+    <!-- 侧边栏 -->
+    <aside class="w-64 bg-white shadow-sm fixed h-full left-0 top-16 z-40 overflow-y-auto transition-all duration-300">
+      <nav class="py-6 px-4">
+        <div class="space-y-1">
+          <p class="text-xs uppercase text-dark-2 font-semibold px-3 mb-2">主导航</p>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-medium">
+            <i class="fa fa-dashboard w-5 text-center"></i>
+            <span>数据仪表盘</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-line-chart w-5 text-center"></i>
+            <span>指标监控</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-exclamation-triangle w-5 text-center"></i>
+            <span>预警管理</span>
+            <span class="ml-auto bg-warning/20 text-warning text-xs px-2 py-0.5 rounded-full">5条未处理</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-file-text w-5 text-center"></i>
+            <span>报表管理</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-comments w-5 text-center"></i>
+            <span>销售反馈</span>
+          </a>
+        </div>
+        
+        <div class="mt-8 space-y-1">
+          <p class="text-xs uppercase text-dark-2 font-semibold px-3 mb-2">系统设置</p>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-cog w-5 text-center"></i>
+            <span>参数配置</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>用户管理</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-dark-2 hover:bg-gray-100 transition-colors">
+            <i class="fa fa-history w-5 text-center"></i>
+            <span>操作日志</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="flex-1 ml-64 p-6">
+      <!-- 页面标题 -->
+      <div class="mb-6">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-dark">AI搜索平台数据监控</h2>
+        <p class="text-dark-2 mt-1">实时监控关键指标，智能预警异常情况，助力产品优化迭代</p>
+      </div>
+
+      <!-- 状态概览卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- 系统状态 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">系统状态</p>
+              <h3 class="text-2xl font-bold mt-1 text-success">正常运行中</h3>
+              <p class="text-xs text-dark-2 mt-2">上次检查：1分钟前</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center text-success">
+              <i class="fa fa-check-circle text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 活跃预警 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">活跃预警</p>
+              <h3 class="text-2xl font-bold mt-1 text-warning">5 条</h3>
+              <p class="text-xs text-dark-2 mt-2">较昨日 +2 条</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning">
+              <i class="fa fa-exclamation-circle text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 今日报表 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">今日报表</p>
+              <h3 class="text-2xl font-bold mt-1 text-primary">12 份</h3>
+              <p class="text-xs text-dark-2 mt-2">已生成 / 待生成 12/3</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-file-text-o text-xl"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 销售反馈 -->
+        <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-dark-2 text-sm">销售反馈</p>
+              <h3 class="text-2xl font-bold mt-1 text-secondary">8 条</h3>
+              <p class="text-xs text-dark-2 mt-2">未处理：3 条</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+              <i class="fa fa-comments-o text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 核心指标监控区域 -->
+      <section class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">核心指标实时监控</h3>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 text-sm rounded-md bg-primary text-white">今日</button>
+            <button class="px-3 py-1 text-sm rounded-md text-dark-2 hover:bg-gray-100">本周</button>
+            <button class="px-3 py-1 text-sm rounded-md text-dark-2 hover:bg-gray-100">本月</button>
+          </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Recall@k 和 CTR 图表 - 已变更为产品信息横坐标 -->
+          <div class="bg-white rounded-xl p-5 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-medium">产品信息 Recall@k 与 CTR 趋势</h4>
+              <div class="flex space-x-1">
+                <span class="flex items-center text-xs text-dark-2">
+                  <span class="w-3 h-3 rounded-full bg-primary inline-block mr-1"></span>Recall@k
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-secondary inline-block mr-1"></span>CTR
+                </span>
+              </div>
+            </div>
+            <div class="h-64">
+              <canvas id="recallCtrChart"></canvas>
+            </div>
+          </div>
+          
+          <!-- MMR 和 Time-to-crawl 图表 -->
+          <div class="bg-white rounded-xl p-5 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-medium">产品信息 MMR 与 Time-to-crawl 趋势</h4>
+              <div class="flex space-x-1">
+                <span class="flex items-center text-xs text-dark-2">
+                  <span class="w-3 h-3 rounded-full bg-warning inline-block mr-1"></span>MMR
+                </span>
+                <span class="flex items-center text-xs text-dark-2 ml-3">
+                  <span class="w-3 h-3 rounded-full bg-danger inline-block mr-1"></span>Time-to-crawl
+                </span>
+              </div>
+            </div>
+            <div class="h-64">
+              <canvas id="mmrTimeChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 指标详情卡片 -->
+      <section class="mb-8">
+        <h3 class="text-lg font-semibold mb-4">指标详情与阈值</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Recall@k 指标 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">Recall@k</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">89.6%</span>
+              <span class="text-xs text-success mb-1"><i class="fa fa-arrow-up"></i> 2.3%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-primary h-2.5 rounded-full" style="width: 89.6%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">阈值范围：≥80% <span class="text-primary">当前：89.6%</span></p>
+          </div>
+          
+          <!-- CTR 指标 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">CTR</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning">预警</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">3.2%</span>
+              <span class="text-xs text-danger mb-1"><i class="fa fa-arrow-down"></i> 1.1%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-secondary h-2.5 rounded-full" style="width: 32%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">阈值范围：≥4% <span class="text-warning">当前：3.2%</span></p>
+          </div>
+          
+          <!-- MMR 指标 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">MMR</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">正常</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">76.3%</span>
+              <span class="text-xs text-success mb-1"><i class="fa fa-arrow-up"></i> 0.8%</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-warning h-2.5 rounded-full" style="width: 76.3%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">阈值范围：≥70% <span class="text-primary">当前：76.3%</span></p>
+          </div>
+          
+          <!-- Time-to-crawl 指标 -->
+          <div class="bg-white rounded-xl p-5 card-shadow hover-lift">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-medium">Time-to-crawl</h4>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-danger/10 text-danger">异常</span>
+            </div>
+            <div class="flex items-end space-x-2 mb-2">
+              <span class="text-2xl font-bold">2.8s</span>
+              <span class="text-xs text-danger mb-1"><i class="fa fa-arrow-up"></i> 0.7s</span>
+            </div>
+            <div class="w-full bg-light-1 rounded-full h-2.5">
+              <div class="bg-danger h-2.5 rounded-full" style="width: 85%"></div>
+            </div>
+            <p class="text-xs text-dark-2 mt-2">阈值范围：≤2s <span class="text-danger">当前：2.8s</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 预警通知和报表区域 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- 最近预警通知 -->
+        <div class="lg:col-span-1 bg-white rounded-xl p-5 card-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">最近预警通知</h3>
+            <a href="#" class="text-xs text-primary">查看全部</a>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- 预警项1 -->
+            <div class="p-3 border border-danger/20 bg-danger/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-danger">Time-to-crawl 超出阈值</p>
+                  <p class="text-xs text-dark-2 mt-1">爬取时间 2.8s 超过阈值 2s</p>
+                </div>
+                <span class="text-xs text-dark-2">10分钟前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">处理</button>
+              </div>
+            </div>
+            
+            <!-- 预警项2 -->
+            <div class="p-3 border border-warning/20 bg-warning/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-warning">CTR 低于阈值</p>
+                  <p class="text-xs text-dark-2 mt-1">点击率 3.2% 低于阈值 4%</p>
+                </div>
+                <span class="text-xs text-dark-2">35分钟前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">处理</button>
+              </div>
+            </div>
+            
+            <!-- 预警项3 -->
+            <div class="p-3 border border-warning/20 bg-warning/5 rounded-lg">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-sm font-medium text-warning">Recall@k 下降趋势</p>
+                  <p class="text-xs text-dark-2 mt-1">连续3小时下降，当前89.6%</p>
+                </div>
+                <span class="text-xs text-dark-2">2小时前</span>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button class="text-xs text-primary hover:underline">已处理</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 最新报表 -->
+        <div class="lg:col-span-2 bg-white rounded-xl p-5 card-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">最新报表</h3>
+            <button class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+              <i class="fa fa-plus mr-1"></i>生成报表
+            </button>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-light-2">
+                  <th class="text-left py-3 font-medium text-dark-2">报表名称</th>
+                  <th class="text-left py-3 font-medium text-dark-2">类型</th>
+                  <th class="text-left py-3 font-medium text-dark-2">生成时间</th>
+                  <th class="text-left py-3 font-medium text-dark-2">状态</th>
+                  <th class="text-left py-3 font-medium text-dark-2">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-light-1 hover:bg-gray-50">
+                  <td class="py-3">产品表现日报（6月15日）</td>
+                  <td class="py-3">
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary">产品表现</span>
+                  </td>
+                  <td class="py-3 text-dark-2">今天 08:30</td>
+                  <td class="py-3"><span class="text-success">已生成</span></td>
+                  <td class="py-3">
+                    <div class="flex space-x-2">
+                      <button class="text-primary hover:text-primary/80"><i class="fa fa-eye"></i></button>
+                      <button class="text-dark-2 hover:text-dark"><i class="fa fa-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="border-b border-light-1 hover:bg-gray-50">
+                  <td class="py-3">权重优化周报（第24周）</td>
+                  <td class="py-3">
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-secondary/10 text-secondary">权重优化</span>
+                  </td>
+                  <td class="py-3 text-dark-2">昨天 18:15</td>
+                  <td class="py-3"><span class="text-success">已生成</span></td>
+                  <td class="py-3">
+                    <div class="flex space-x-2">
+                      <button class="text-primary hover:text-primary/80"><i class="fa fa-eye"></i></button>
+                      <button class="text-dark-2 hover:text-dark"><i class="fa fa-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="border-b border-light-1 hover:bg-gray-50">
+                  <td class="py-3">行业对比月报（5月）</td>
+                  <td class="py-3">
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-warning/10 text-warning">行业对比</span>
+                  </td>
+                  <td class="py-3 text-dark-2">2023-06-01 10:00</td>
+                  <td class="py-3"><span class="text-success">已生成</span></td>
+                  <td class="py-3">
+                    <div class="flex space-x-2">
+                      <button class="text-primary hover:text-primary/80"><i class="fa fa-eye"></i></button>
+                      <button class="text-dark-2 hover:text-dark"><i class="fa fa-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                  <td class="py-3">产品表现预测分析</td>
+                  <td class="py-3">
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-primary/10 text-primary">产品表现</span>
+                  </td>
+                  <td class="py-3 text-dark-2">今天 14:00</td>
+                  <td class="py-3"><span class="text-dark-2">生成中</span></td>
+                  <td class="py-3">
+                    <div class="flex space-x-2">
+                      <button class="text-dark-2" disabled><i class="fa fa-eye"></i></button>
+                      <button class="text-dark-2" disabled><i class="fa fa-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 销售反馈与闭环迭代 -->
+      <section class="mb-8">
+        <h3 class="text-lg font-semibold mb-4">销售反馈与闭环迭代</h3>
+        
+        <div class="bg-white rounded-xl p-5 card-shadow">
+          <!-- 反馈与迭代流程 - 优化后的图标与箭头样式 -->
+          <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <!-- 销售反馈收集 -->
+            <div class="process-item flex flex-col items-center mb-4 md:mb-0">
+              <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-2 shadow-lg">
+                <i class="fa fa-comments text-xl"></i>
+              </div>
+              <p class="text-sm font-medium">销售反馈收集</p>
+            </div>
+            
+            <!-- 连接线与箭头 1 -->
+            <div class="process-connector">
+              <i class="connector-arrow fa fa-long-arrow-right text-xl md:hidden"></i>
+              <i class="connector-arrow fa fa-chevron-right hidden md:block"></i>
+            </div>
+            
+            <!-- 数据分析 -->
+            <div class="process-item flex flex-col items-center mb-4 md:mb-0">
+              <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-2 shadow-lg">
+                <i class="fa fa-bar-chart text-xl"></i>
+              </div>
+              <p class="text-sm font-medium">数据分析</p>
+            </div>
+            
+            <!-- 连接线与箭头 2 -->
+            <div class="process-connector">
+              <i class="connector-arrow fa fa-long-arrow-right text-xl md:hidden"></i>
+              <i class="connector-arrow fa fa-chevron-right hidden md:block"></i>
+            </div>
+            
+            <!-- 产品优化 -->
+            <div class="process-item flex flex-col items-center mb-4 md:mb-0">
+              <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-2 shadow-lg">
+                <i class="fa fa-cogs text-xl"></i>
+              </div>
+              <p class="text-sm font-medium">产品优化</p>
+            </div>
+            
+            <!-- 连接线与箭头 3 -->
+            <div class="process-connector">
+              <i class="connector-arrow fa fa-long-arrow-right text-xl md:hidden"></i>
+              <i class="connector-arrow fa fa-chevron-right hidden md:block"></i>
+            </div>
+            
+            <!-- 闭环迭代 -->
+            <div class="process-item flex flex-col items-center">
+              <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center text-white mb-2 shadow-lg">
+                <i class="fa fa-refresh text-xl"></i>
+              </div>
+              <p class="text-sm font-medium">闭环迭代</p>
+            </div>
+          </div>
+          
+          <!-- 最近销售反馈 -->
+          <div class="mt-6">
+            <h4 class="font-medium mb-3">最近销售反馈</h4>
+            
+            <div class="space-y-4">
+              <div class="p-4 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <p class="font-medium">搜索结果相关性不足</p>
+                    <p class="text-sm text-dark-2 mt-1">客户反馈某些行业关键词的搜索结果相关性较低，建议优化算法模型。</p>
+                  </div>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning">未处理</span>
+                </div>
+                <div class="mt-3 flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img src="https://picsum.photos/id/1012/200/200" alt="销售人员头像" class="w-6 h-6 rounded-full mr-2">
+                    <span class="text-xs text-dark-2">张销售 · 昨天 14:25</span>
+                  </div>
+                  <button class="text-xs text-primary">处理反馈</button>
+                </div>
+              </div>
+              
+              <div class="p-4 border border-light-2 rounded-lg hover:border-primary/30 transition-colors">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <p class="font-medium">搜索响应速度优化建议</p>
+                    <p class="text-sm text-dark-2 mt-1">大客户希望进一步提升搜索响应速度，特别是在高峰时段的稳定性。</p>
+                  </div>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">已处理</span>
+                </div>
+                <div class="mt-3 flex items-center justify-between">
+                  <div class="flex items-center">
+                    <img src="https://picsum.photos/id/1025/200/200" alt="销售人员头像" class="w-6 h-6 rounded-full mr-2">
+                    <span class="text-xs text-dark-2">李销售 · 2023-06-12 09:18</span>
+                  </div>
+                  <button class="text-xs text-primary">查看处理结果</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 页脚 -->
+  <footer class="bg-white border-t border-light-2 py-4 ml-64">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <p class="text-xs text-dark-2">© 2023 AI搜索平台数据监控模块. 保留所有权利.</p>
+        <div class="flex space-x-4 mt-2 md:mt-0">
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">使用帮助</a>
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">隐私政策</a>
+          <a href="#" class="text-xs text-dark-2 hover:text-primary">联系我们</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 页面加载完成后初始化图表
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化Recall@k和CTR图表 - 已变更为产品信息横坐标
+      const recallCtrCtx = document.getElementById('recallCtrChart').getContext('2d');
+      const recallCtrChart = new Chart(recallCtrCtx, {
+        type: 'line',
+        data: {
+          labels: ['产品A', '产品B', '产品C', '产品D', '产品E', '产品F', '产品G'],
+          datasets: [
+            {
+              label: 'Recall@k',
+              data: [92.5, 88.3, 90.1, 85.7, 89.6, 87.2, 91.4],
+              borderColor: '#165DFF',
+              backgroundColor: 'rgba(22, 93, 255, 0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'CTR',
+              data: [4.8, 3.2, 3.9, 5.1, 3.5, 4.2, 2.9],
+              borderColor: '#36CFC9',
+              backgroundColor: 'rgba(54, 207, 201, 0.1)',
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 0,
+              max: 100,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+
+      // 初始化MMR和Time-to-crawl图表 - 已变更为产品信息横坐标
+      const mmrTimeCtx = document.getElementById('mmrTimeChart').getContext('2d');
+      const mmrTimeChart = new Chart(mmrTimeCtx, {
+        type: 'line',
+        data: {
+          labels: ['产品A', '产品B', '产品C', '产品D', '产品E', '产品F', '产品G'],
+          datasets: [
+            {
+              label: 'MMR',
+              data: [75.1, 78.3, 76.5, 79.8, 77.0, 80.2, 76.3],
+              borderColor: '#FF7D00',
+              backgroundColor: 'rgba(255, 125, 0, 0.1)',
+              tension: 0.4,
+              fill: true,
+              yAxisID: 'y'
+            },
+            {
+              label: 'Time-to-crawl',
+              data: [1.8, 2.1, 1.9, 2.3, 2.0, 2.5, 2.2],
+              borderColor: '#F53F3F',
+              backgroundColor: 'rgba(245, 63, 63, 0.1)',
+              tension: 0.4,
+              fill: true,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: {
+                display: true,
+                text: 'MMR (%)',
+                color: '#FF7D00',
+                font: {
+                  size: 10
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: {
+                display: true,
+                text: 'Time-to-crawl (s)',
+                color: '#F53F3F',
+                font: {
+                  size: 10
+                }
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+
+      // 滚动时改变导航栏样式
+      window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 10) {
+          header.classList.add('shadow');
+        } else {
+          header.classList.remove('shadow');
+        }
+      });
+
+      // 为流程步骤添加动画效果
+      const processItems = document.querySelectorAll('.process-item');
+      processItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+          this.classList.add('scale-110');
+        });
+        item.addEventListener('mouseleave', function() {
+          this.classList.remove('scale-110');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+    

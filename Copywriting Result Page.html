@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thinkplus 锋行者 FLUXO 用户评价</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff2442',
+                        secondary: '#333333',
+                        light: '#f8f8f8',
+                        'gray-light': '#eeeeee',
+                        'gray-medium': '#999999',
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .text-shadow {
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            .tag-pill {
+                @apply bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-1 mb-1 inline-block transition-all hover:bg-primary hover:text-white;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:translate-y-[-5px] hover:card-shadow;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-secondary">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-bolt text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold">thinkplus 锋行者 FLUXO</h1>
+            </div>
+            <div class="flex space-x-4">
+                <button class="category-btn active px-3 py-1 rounded-full text-sm font-medium bg-primary text-white" data-category="all">全部</button>
+                <button class="category-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-light text-secondary hover:bg-primary hover:text-white transition-colors" data-category="tech">科技发烧友</button>
+                <button class="category-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-light text-secondary hover:bg-primary hover:text-white transition-colors" data-category="travel">旅行爱好者</button>
+                <button class="category-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-light text-secondary hover:bg-primary hover:text-white transition-colors" data-category="female">女性用户</button>
+                <button class="category-btn px-3 py-1 rounded-full text-sm font-medium bg-gray-light text-secondary hover:bg-primary hover:text-white transition-colors" data-category="business">商旅用户</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 产品介绍横幅 -->
+        <div class="relative rounded-2xl overflow-hidden mb-10">
+            <img src="https://picsum.photos/1200/400" alt="thinkplus 锋行者 FLUXO 充电套装展示图" class="w-full h-64 md:h-80 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2 text-shadow">thinkplus 锋行者 FLUXO</h2>
+                <p class="text-white/90 max-w-2xl">140W大功率快充，多设备兼容，满足不同用户群体的充电需求，颜值与实力并存的充电神器</p>
+            </div>
+        </div>
+
+        <!-- 卡片网格布局 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 科技发烧友画像 1 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="tech">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=1" alt="140W充电套装展示" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        科技发烧友
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">硬核黑科技！140W 充电套装颠覆想象💥</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        作为数码控，用过 N 个充电宝，thinkplus 锋行者 FLUXO 才是真・性能猛兽！业界首创数字混动充电技术，电量超 50% 时 C1 口直出 140W，比 C 牌虚标 165W 实测强太多～<br><br>
+                        2.01 寸大屏实时显功率曲线 + 温度，充电状态可视化，安全感拉满。支持拯救者私有协议，搭配 240W 快充线，笔记本快充不卡顿，还能三口同时充，多设备党狂喜！半透机身看得到元器件，科技感爆棚，这才是发烧友该有的装备～
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#数字混动充电技术</span>
+                        <span class="tag-pill">#140W 快充</span>
+                        <span class="tag-pill">#拯救者协议</span>
+                        <span class="tag-pill">#功率可视化</span>
+                        <span class="tag-pill">#多设备充电</span>
+                        <span class="tag-pill">#数码发烧友</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=101" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@数码达人</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 2.5k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 128</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 科技发烧友画像 2 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="tech">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=2" alt="充电套装内部结构展示" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        科技发烧友
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">数码党必入！这款充电套装藏满黑科技🔧</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        敢说这是今年最惊艳的充电装备！thinkplus 锋行者 FLUXO 的 140W 单口输出实打实，对比很多号称高功率却掉速的竞品，给拯救者笔记本充电快到飞起，还能双口 130W 同时快充。<br><br>
+                        铁硅铝一体成型电感 + 高品质元器件，稳定性拉满。4.5mm 仿生圆角 + 39mm 超薄设计，颜值与性能并存。小电流模式适配耳机、手环，千种机型兼容，数码发烧友闭眼冲不亏！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#140W 单口输出</span>
+                        <span class="tag-pill">#高品质元器件</span>
+                        <span class="tag-pill">#超薄充电宝</span>
+                        <span class="tag-pill">#小电流模式</span>
+                        <span class="tag-pill">#千种机型兼容</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=102" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@科技测评师</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 1.8k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 96</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 旅行爱好者画像 1 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="travel">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=3" alt="旅行中的充电宝使用场景" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        旅行爱好者
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">旅行充电自由！20000mAh 登机神器 get✈️</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        经常背包出行的人，一定要入这款 thinkplus 锋行者 FLUXO！20000mAh 大容量直接过安检，比那些容量不够还不能登机的充电宝实用 10 倍～<br><br>
+                        140W 快充 + 1 小时充满自身，在外不怕断电焦虑。420g 像可乐罐大小，塞进背包不占地儿。搭配 1.5m 长 240W 快充线，手机、平板、无人机全搞定，旅途中随时补能，拍照、导航再也不慌！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#20000mAh 登机充电宝</span>
+                        <span class="tag-pill">#1 小时自充</span>
+                        <span class="tag-pill">#便携充电宝</span>
+                        <span class="tag-pill">#长续航充电</span>
+                        <span class="tag-pill">#旅行装备</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=103" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@旅行摄影师</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 3.2k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 156</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 旅行爱好者画像 2 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="travel">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=4" alt="户外露营时使用充电宝" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        旅行爱好者
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">户外党福音！这款充电宝承包旅途电量🔋</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        徒步、露营再也不用带一堆充电器了！thinkplus 锋行者 FLUXO 太懂旅行者了～20000mAh 大容量，能给手机充 5-6 次，140W 快充让笔记本快速回血，处理照片、剪视频超顺畅。<br><br>
+                        半透金属机身耐造抗摔，4.5mm 圆角握感舒服，挂在背包上不硌人。支持小电流模式，连运动手表都能充，适配华为、苹果等多品牌设备，旅行充电全靠它！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#户外充电神器</span>
+                        <span class="tag-pill">#耐造抗摔充电宝</span>
+                        <span class="tag-pill">#小电流模式</span>
+                        <span class="tag-pill">#多品牌适配</span>
+                        <span class="tag-pill">#露营装备</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=104" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@户外探险者</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 2.1k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 89</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 女性用户画像 1 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="female">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=5" alt="高颜值充电宝展示" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        女性用户
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">颜值党沦陷！这款充电宝美到想天天带💄</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        被 thinkplus 锋行者 FLUXO 的颜值戳中了！半透金属机身 + 黑灰高级配色，像个精致的科技小摆件，比那些傻大黑粗的充电宝好看太多～<br><br>
+                        420g 超轻便，放化妆包毫无压力，4.5mm 仿生圆角握在手里软软糯糯不硌手。2.01 寸大屏显示清晰，还带小白点电量提示，少女心满满。140W 快充 + 多设备兼容，充手机、平板超快，颜值与实力并存的宝藏充电神器！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#高颜值充电宝</span>
+                        <span class="tag-pill">#轻便小巧充电</span>
+                        <span class="tag-pill">#黑灰高级色</span>
+                        <span class="tag-pill">#少女心设计</span>
+                        <span class="tag-pill">#女生必备</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=105" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@美妆博主</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 4.7k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 231</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 女性用户画像 2 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="female">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=6" alt="充电宝礼盒套装" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        女性用户
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">精致女孩必备！充电套装还能当搭配单品✨</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        谁能拒绝又美又实用的充电装备？thinkplus 锋行者 FLUXO 礼盒版太适合女生了！简约高级的包装，拆开像拆礼物，自用送人都有面～<br><br>
+                        充电宝可乐罐大小，搭配同色系收纳袋，背着出门超吸睛。140W 快充不用等，充手机半小时满血，还能给美容仪、耳机充电，精致女孩的电量管家非它莫属！金属质感拿在手里超有范儿，妥妥的穿搭小配饰～
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#礼盒版充电宝</span>
+                        <span class="tag-pill">#精致包装</span>
+                        <span class="tag-pill">#收纳方便</span>
+                        <span class="tag-pill">#美容仪适配</span>
+                        <span class="tag-pill">#女生礼物</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=106" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@时尚达人</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 3.8k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 178</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商旅用户画像 1 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="business">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=7" alt="商务人士使用充电宝" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        商旅用户
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">商务人士续命神器！充电套装提升工作效率💼</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        经常出差开会，全靠 thinkplus 锋行者 FLUXO 撑场面！140W 快充给笔记本充电，开会间隙就能补满电，比竞品充电快 30%，再也不怕电脑中途断电掉链子。<br><br>
+                        20000mAh 能上飞机，搭配 140W 三口充电器，酒店里同时充电脑、手机、平板，不用抢插座。420g 轻便易携，放进公文包不占地，金属机身显质感，商务场合拿出来超有面，效率党必入！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#商务快充</span>
+                        <span class="tag-pill">#登机充电宝</span>
+                        <span class="tag-pill">#三口充电器</span>
+                        <span class="tag-pill">#高效补能</span>
+                        <span class="tag-pill">#出差必备</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=107" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@商务精英</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 2.3k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 105</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商旅用户画像 2 -->
+            <div class="card item-card card-hover rounded-xl overflow-hidden bg-white" data-category="business">
+                <div class="relative">
+                    <img src="https://picsum.photos/600/400?random=8" alt="机场使用充电宝工作" class="w-full h-56 object-cover">
+                    <div class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                        商旅用户
+                    </div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold mb-3">职场人必备！这款充电套装解决出差充电难题✈️</h3>
+                    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+                        作为经常跑业务的职场人，强烈安利 thinkplus 锋行者 FLUXO！140W 大功率适配拯救者、ThinkPad 等商务本，充电时电脑不卡顿，处理文件超顺畅，比普通充电宝提升工作效率。<br><br>
+                        2.01 寸大屏实时显功率、温度，充电状态一目了然，安全感十足。标配 1.5m 长快充线，酒店床头、机场候机都能用，收纳袋一装不凌乱。联想大厂品质，售后有保障，商务出行就靠它！
+                    </p>
+                    <div class="flex flex-wrap">
+                        <span class="tag-pill">#商务本适配</span>
+                        <span class="tag-pill">#充电可视化</span>
+                        <span class="tag-pill">#长快充线</span>
+                        <span class="tag-pill">#大厂品质</span>
+                        <span class="tag-pill">#职场必备</span>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <img src="https://picsum.photos/50/50?random=108" alt="用户头像" class="w-8 h-8 rounded-full object-cover">
+                            <span class="ml-2 text-xs text-gray-medium">@职场达人</span>
+                        </div>
+                        <div class="flex space-x-3 text-gray-medium">
+                            <span class="flex items-center text-xs"><i class="fa fa-heart-o mr-1"></i> 1.9k</span>
+                            <span class="flex items-center text-xs"><i class="fa fa-comment-o mr-1"></i> 76</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white mt-12 py-6 border-t border-gray-light">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center mb-3">
+                <i class="fa fa-bolt text-primary text-xl mr-2"></i>
+                <span class="font-bold">thinkplus 锋行者 FLUXO</span>
+            </div>
+            <p class="text-xs text-gray-medium">
+                本文内容仅作展示，产品信息请以官方发布为准 | 小红书风格展示页面
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 分类筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const cards = document.querySelectorAll('.item-card');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 更新按钮样式
+                    categoryBtns.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-light', 'text-secondary');
+                    });
+                    this.classList.remove('bg-gray-light', 'text-secondary');
+                    this.classList.add('bg-primary', 'text-white');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // 筛选卡片
+                    cards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                            // 添加淡入动画
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 50);
+                        } else {
+                            // 添加淡出动画
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+
+            // 图片加载完成后的淡入效果
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.5s ease-in-out';
+                
+                img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+                
+                // 如果图片已经缓存
+                if (img.complete) {
+                    img.style.opacity = '1';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

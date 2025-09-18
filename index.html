@@ -1,0 +1,608 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI影响力营销平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        info: '#06B6D4',
+                        danger: '#EF4444',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+            }
+            .gradient-bg {
+                @apply bg-gradient-to-r from-primary to-secondary;
+            }
+            .text-gradient {
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/95 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-line-chart text-2xl text-primary"></i>
+                <span class="text-xl font-bold text-dark">AI影响力营销平台</span>
+            </div>
+            
+            <!-- 桌面导航 -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="font-medium text-primary hover:text-secondary transition-colors">首页</a>
+                <a href="#" class="font-medium text-gray-600 hover:text-primary transition-colors">功能</a>
+                <a href="#" class="font-medium text-gray-600 hover:text-primary transition-colors">产品</a>
+                <a href="#" class="font-medium text-gray-600 hover:text-primary transition-colors">数据分析</a>
+                <a href="#" class="font-medium text-gray-600 hover:text-primary transition-colors">帮助中心</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button class="hidden md:block px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                    <i class="fa fa-user-circle mr-1"></i> 登录
+                </button>
+                <button class="px-4 py-2 rounded-full gradient-bg text-white hover:opacity-90 transition-opacity shadow-md">
+                    免费试用
+                </button>
+                <!-- 移动端菜单按钮 -->
+                <button id="menuBtn" class="md:hidden text-gray-700 hover:text-primary">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#" class="font-medium text-primary py-2">首页</a>
+                <a href="#" class="font-medium text-gray-600 py-2 hover:text-primary transition-colors">功能</a>
+                <a href="#" class="font-medium text-gray-600 py-2 hover:text-primary transition-colors">产品</a>
+                <a href="#" class="font-medium text-gray-600 py-2 hover:text-primary transition-colors">数据分析</a>
+                <a href="#" class="font-medium text-gray-600 py-2 hover:text-primary transition-colors">帮助中心</a>
+                <a href="#" class="font-medium text-gray-600 py-2 hover:text-primary transition-colors">
+                    <i class="fa fa-user-circle mr-1"></i> 登录
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-blue-50 to-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-16">
+                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mb-6">
+                    智能驱动的<span class="text-gradient">影响力营销</span>解决方案
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8">
+                    整合AI技术与营销洞察，助力品牌提升影响力，实现业务增长
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button class="px-8 py-3 rounded-full gradient-bg text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/20 transition-all">开始使用</button>
+                    <button class="px-8 py-3 rounded-full bg-white text-primary border border-primary text-lg font-medium hover:bg-gray-50 transition-all">
+                        <i class="fa fa-play-circle mr-2"></i>观看演示
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 数据概览卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-500 font-medium">营销效率提升</h3>
+                        <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-sm font-medium">+85%</span>
+                    </div>
+                    <div class="flex items-end space-x-2">
+                        <span class="text-3xl md:text-4xl font-bold">85.6%</span>
+                        <span class="text-green-500 mb-1"><i class="fa fa-arrow-up"></i> 12.3%</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-500 font-medium">内容生成速度</h3>
+                        <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm font-medium">高效</span>
+                    </div>
+                    <div class="flex items-end space-x-2">
+                        <span class="text-3xl md:text-4xl font-bold">3分钟</span>
+                        <span class="text-gray-500 mb-1">平均耗时</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-gray-500 font-medium">多平台覆盖</h3>
+                        <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-sm font-medium">全渠道</span>
+                    </div>
+                    <div class="flex items-end space-x-2">
+                        <span class="text-3xl md:text-4xl font-bold">12+</span>
+                        <span class="text-gray-500 mb-1">主流平台</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能模块区域 -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">强大功能模块</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    全方位覆盖营销流程的各个环节，从数据管理到智能优化，一站式解决方案
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 数据管理系统 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-database text-xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">数据管理系统</h3>
+                    <p class="text-gray-600">
+                        支持多源数据接入，提供数据清洗、标准化处理和版本管理功能，确保产品基础数据的准确性和一致性。
+                    </p>
+                </div>
+                
+                <!-- NLP处理引擎 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-cyan-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-language text-xl text-info"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">NLP处理引擎</h3>
+                    <p class="text-gray-600">
+                        集成BERT、SimCSE等先进自然语言处理模型，实现产品文本的深度理解和向量化表示。
+                    </p>
+                </div>
+                
+                <!-- 智能内容生成 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-magic text-xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">智能内容生成</h3>
+                    <p class="text-gray-600">
+                        基于GPT、BLOOM等大语言模型，结合动态权重参数，自动生成优化的产品描述和营销内容。
+                    </p>
+                </div>
+                
+                <!-- 多平台发布接口 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-plug text-xl text-success"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">多平台发布接口</h3>
+                    <p class="text-gray-600">
+                        提供标准化接口，支持一键发布至搜索引擎、电商平台和企业官网，实现多渠道同步展示。
+                    </p>
+                </div>
+                
+                <!-- 热点监控中心 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-line-chart text-xl text-warning"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">热点监控中心</h3>
+                    <p class="text-gray-600">
+                        实时追踪产品关键指标变化，提供可视化仪表盘和异常预警功能，及时发现潜在问题。
+                    </p>
+                </div>
+                
+                <!-- 智能优化引擎 -->
+                <div class="bg-gray-50 rounded-xl p-6 card-hover border border-gray-100">
+                    <div class="w-12 h-12 rounded-lg bg-pink-100 flex items-center justify-center mb-4">
+                        <i class="fa fa-cogs text-xl text-danger"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">智能优化引擎</h3>
+                    <p class="text-gray-600">
+                        基于强化学习算法，自动优化权重参数和产品内容，持续提升产品搜索表现和用户体验。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据分析区域 -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">数据驱动决策</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    实时监控营销效果，通过直观数据可视化，助力您做出更明智的营销决策
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">Recall与CTR趋势</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">产品对比</button>
+                            <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm font-medium hover:bg-gray-200 transition-colors">周</button>
+                            <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-sm font-medium hover:bg-gray-200 transition-colors">月</button>
+                        </div>
+                    </div>
+                    <div class="h-80">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <h3 class="text-xl font-bold mb-4">平台分布</h3>
+                        <div class="h-64">
+                            <canvas id="platformsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品展示区域 -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">产品案例展示</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    看看我们的AI营销解决方案如何为各类产品提升影响力和销售表现
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- 联想鼠标 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/af1d011cd1724061a59b9de9b03a2429~tplv-a9rns2rl98-image.image?rcl=202509172314244A6BD55CD277F9F41618&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1758726864&amp;x-signature=PjBxpF0iwsMhtlh01%2B%2B5W9IxsFc%3D" alt="联想无线鼠标" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded-full">
+                            热销
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">联想无线鼠标</h3>
+                        <p class="text-gray-600 mb-6">高精度传感器，长续航电池，人体工学设计，适合办公和游戏</p>
+                        <button class="w-full py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center">
+                            查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 充电宝 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://p3-search.byteimg.com/obj/labis/2669fb1776f0385698908873ed7fada7" alt="大容量充电宝" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            新品
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">大容量充电宝</h3>
+                        <p class="text-gray-600 mb-6">20000mAh大容量，双向快充，数显电量，多接口输出</p>
+                        <button class="w-full py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center">
+                            查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 键盘 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/f4472b13da824fa7acb289122bf43819~tplv-a9rns2rl98-image.image?rcl=20250917231346E12A4B465C8E5886F450&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1758726826&amp;x-signature=eiiqjSvwlEvA5Jrl%2Bs4Eih8b92Y%3D" alt="机械键盘" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">机械键盘</h3>
+                        <p class="text-gray-600 mb-6">青轴机械轴体，RGB背光，全尺寸布局，铝合金面板</p>
+                        <button class="w-full py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center">
+                            查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- thinkplus锋行者140W -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100">
+                    <div class="h-56 overflow-hidden relative">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/0080fbf61c9941a38d72240ea007de65~tplv-a9rns2rl98-image.image?rcl=202509172318207E02D83DBD2A958C6561&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1758727101&amp;x-signature=wBnnG9HqQcpyzaSliDcx7XMLHno%3D" alt="thinkplus锋行者140W便携电源适配器" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            畅销
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">thinkplus锋行者140W</h3>
+                        <p class="text-gray-600 mb-6">140W大功率输出，多设备兼容，便携设计，智能温控保护系统</p>
+                        <button class="w-full py-3 rounded-full bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center">
+                            查看详情 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition-colors">
+                    查看更多产品 <i class="fa fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 行动召唤区域 -->
+    <section class="py-20 gradient-bg text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">准备好提升您的营销影响力了吗？</h2>
+            <p class="text-lg md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">
+                立即开始使用AI影响力营销平台，体验智能营销带来的惊人效果
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="px-8 py-3 rounded-full bg-white text-primary font-medium hover:bg-gray-100 transition-all shadow-lg">
+                    免费注册
+                </button>
+                <button class="px-8 py-3 rounded-full bg-transparent border-2 border-white text-white font-medium hover:bg-white/10 transition-all">
+                    预约演示
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-gray-400 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 text-white mb-4">
+                        <i class="fa fa-line-chart text-xl"></i>
+                        <span class="text-xl font-bold">AI影响力营销平台</span>
+                    </div>
+                    <p class="mb-4">
+                        利用人工智能技术，助力品牌提升营销影响力，实现业务增长
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-weixin text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-weibo text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-linkedin text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="fa fa-twitter text-xl"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">产品</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">功能介绍</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">定价方案</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">案例研究</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">更新日志</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">资源</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">帮助中心</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">营销指南</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API文档</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">合作伙伴</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">公司</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">关于我们</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">联系我们</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">加入我们</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">隐私政策</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p>© 2023 AI影响力营销平台. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('shadow-sm');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.add('shadow-sm');
+            }
+        });
+        
+        // 移动端菜单切换
+        document.getElementById('menuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 图表初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 3C产品Recall与CTR趋势图
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['智能手机', '笔记本电脑', '平板电脑', '智能手表', '无线耳机', '机械键盘', '游戏手柄'],
+                    datasets: [
+                        {
+                            label: 'Recall概率',
+                            data: [0.82, 0.76, 0.68, 0.91, 0.79, 0.62, 0.58],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'CTR (点击率)',
+                            data: [0.18, 0.15, 0.12, 0.22, 0.19, 0.09, 0.07],
+                            backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                            borderColor: 'rgba(139, 92, 246, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 0) {
+                                        label += (context.raw * 100).toFixed(1) + '%';
+                                    } else {
+                                        label += (context.raw * 100).toFixed(1) + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '3C类数码产品'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Recall概率'
+                            },
+                            min: 0,
+                            max: 1,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value * 100) + '%';
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'CTR (点击率)'
+                            },
+                            min: 0,
+                            max: 0.3,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value * 100) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 平台分布饼图
+            const platformsCtx = document.getElementById('platformsChart').getContext('2d');
+            new Chart(platformsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['小红书', '微博', '抖音', 'Tik Tok', 'X', 'Meta', '其他'],
+                    datasets: [{
+                        data: [25, 20, 18, 12, 8, 10, 7],
+                        backgroundColor: [
+                            '#E60023', // 小红书红色
+                            '#E6162D', // 微博红色
+                            '#000000', // 抖音黑色
+                            '#000000', // Tik Tok黑色
+                            '#1DA1F2', // X/Twitter蓝色
+                            '#4267B2', // Meta/FB蓝色
+                            '#94A3B8'  // 其他灰色
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+        
+        // 添加卡片动画效果
+        const animateOnScroll = function() {
+            const cards = document.querySelectorAll('.card-hover');
+            
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const triggerBottom = window.innerHeight * 0.8;
+                
+                if (cardTop < triggerBottom) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // 初始设置
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', animateOnScroll);
+        // 初始加载时执行一次
+        animateOnScroll();
+    </script>
+
+
+</body></html>
